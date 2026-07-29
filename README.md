@@ -1,6 +1,6 @@
 # singleton-py
 
-PEP 695 type-parameterized singleton decorator. zero dependencies. 11 lines of functional code.
+type-parameterized singleton decorator for python 3.x (PEP 695 compliant). works with all modern type-checkers. zero dependencies. 11 lines of functional code.
 
 ## INSTALL
 
@@ -24,7 +24,7 @@ class Database:
 
 just import and drop a `@singleton` decorator above your class definition. yeah, that's all there is to it.
 
-## FUNDAMENTALS
+### USAGE // TECHNICALS
 
 ```python
 # all calls return the same instance. args are ignored after first init.
@@ -45,27 +45,11 @@ Service.version()  # "v2.0"
 Database.__wrapped__  # <class 'Database'>
 ```
 
-### SEMANTICS
+### USAGE // SEMANTICS
 
 - **first call wins.** the instance is cached on first `__call__`. subsequent calls ignore new arguments and return the cached instance.
-- **classmethod passthrough.** `__getattr__` delegates attribute lookups to the wrapped class, so `@classmethod` and static attributes work transparently.
-- **`__wrapped__`.** the undecorated class is stored on the wrapper for introspection.
-
-## TESTS
-
-```bash
-python run_tests.py
-```
-
-| Test | What it verifies |
-|---|---|
-| `test_instance_identity` | `srv1 is srv2` after repeated instantiation |
-| `test_class_method` | `@classmethod` resolves through the wrapper to the correct class name |
-| `test_argument_immutability` | re-instantiation with new args does **not** mutate the cached instance |
-| `test_attribute_identity` | a class attribute holding `Service()` points to the global singleton |
-| `test_wrapped_attribute` | `__wrapped__` exists and equals the undecorated class |
-
-all tests are plain `assert`-based. no framework required. a passing run prints `BEGIN`/`END` markers for each test; a failure raises `AssertionError` with a traceback.
+- **all attributes passthrough.** `__getattr__` delegates attribute lookups to the wrapped class, so `@classmethod` and static attributes work transparently.
+- **underlying structure is preserved.** the undecorated class is preserved via the `__wrapped__` attribute enabling seamless backwards compatability with existing structure-dependent code and/or introspection. 
 
 ## REFERENCE
 
@@ -79,6 +63,5 @@ singleton(cls: type[T]) -> _SingletonWrapper[T]
 | `__getattr__(name)` | proxies attribute access to the wrapped class |
 | `__wrapped__` | reference to the original, undecorated class |
 
-## LICENSE
 
-MIT
+:)
