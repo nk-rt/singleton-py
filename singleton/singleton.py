@@ -1,3 +1,10 @@
+"""
+nk-rt/singleton-py: singleton/singleton.py
+
+PEP 695 type-parameterized singleton decorator and
+descriptor implementation.
+"""
+
 from typing import Any
 
 class _SingletonWrapper[cls_T]:
